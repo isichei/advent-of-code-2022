@@ -134,14 +134,24 @@ func walk_the_commands(lines []string) map[int]basic_file {
 				// fmt.Println("... skip")
 		}
 	}
-	// Save whatever dir finished
-	current_dir.size = get_dir_size(current_dir, file_lookup) 
-	file_lookup[current_id] = current_dir
 
-	// Finalise the root dir
+	// Resolve the final dir and then clean up the stack
+	current_dir.size = get_dir_size(current_dir, file_lookup)
+	file_lookup[current_id] = current_dir
+	filo, _ = pop_stack(filo)
+
+	// Come out of the stack and calculate sizes
+	for len(filo) > 0 {
+		current_id = filo[len(filo)-1]
+		current_dir = file_lookup[current_id]
+		current_dir.size = get_dir_size(current_dir, file_lookup)
+		file_lookup[current_id] = current_dir
+		filo, _ = pop_stack(filo)
+	}
+
 	current_dir = file_lookup[0]
 	current_dir.size = get_dir_size(current_dir, file_lookup)
-	file_lookup[0] = current_dir 
+	file_lookup[0] = current_dir
 	return file_lookup
 }
 
