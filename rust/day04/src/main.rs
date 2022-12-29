@@ -58,6 +58,7 @@ fn main() {
     println!("Part 2: Number of full overlaps: {part2:?}");
 }
 
+#[cfg(test)]
 mod tests {
     use super::*;
 
